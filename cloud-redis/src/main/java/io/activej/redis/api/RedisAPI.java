@@ -593,4 +593,14 @@ public interface RedisAPI {
 
 	Promise<Long> zunionstore(String destination, String key, String... otherKeys);
 	// endregion
+
+	// region hyperloglog
+	Promise<Long> pfadd(String key, String element, String... otherElements);
+
+	Promise<Long> pfadd(String key, byte[] element, byte[]... otherElements);
+
+	Promise<Long> pfcount(String key, String... otherKeys);
+
+	Promise<Void> pfmerge(String destKey, String sourceKey, String... otherSourceKeys);
+	// endregion
 }

@@ -1283,6 +1283,28 @@ public final class RedisConnection implements RedisAPI, Connection {
 		return doZstore(ZUNIONSTORE, destination, null, key, otherKeys);
 	}
 	// endregion
+
+	// region hyperloglog
+	@Override
+	public Promise<Long> pfadd(String key, String element, String... otherElements) {
+		return send(RedisCommand.of(PFADD, charset, list(key, element, otherElements)), RedisConnection::parseInteger);
+	}
+
+	@Override
+	public Promise<Long> pfadd(String key, byte[] element, byte[]... otherElements) {
+		return send(RedisCommand.of(PFADD, list(key.getBytes(charset), element, otherElements)), RedisConnection::parseInteger);
+	}
+
+	@Override
+	public Promise<Long> pfcount(String key, String... otherKeys) {
+		return send(RedisCommand.of(PFCOUNT, charset, list(key, otherKeys)), RedisConnection::parseInteger);
+	}
+
+	@Override
+	public Promise<Void> pfmerge(String destKey, String sourceKey, String... otherSourceKeys) {
+		return send(RedisCommand.of(PFMERGE, charset, list(destKey, sourceKey, otherSourceKeys)), this::expectOk);
+	}
+	// endregion
 	// endregion
 
 	// region connection and pooling

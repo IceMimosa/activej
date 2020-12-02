@@ -53,7 +53,7 @@ public final class HttpCharset extends Token {
 	private final int length;
 	private Charset javaCharset;
 
-	private HttpCharset(byte[] bytes, int offset, int length, @Nullable byte[] lowerCaseBytes, int lowerCaseHashCode) {
+	private HttpCharset(byte[] bytes, int offset, int length, byte @Nullable [] lowerCaseBytes, int lowerCaseHashCode) {
 		super(lowerCaseBytes, lowerCaseHashCode);
 		this.bytes = bytes;
 		this.offset = offset;
@@ -98,7 +98,7 @@ public final class HttpCharset extends Token {
 				}
 				javaCharset = forName(charsetName);
 			} catch (Exception e) {
-				throw new ParseException(HttpCharset.class, "Can't fetch charset for " + charsetName, e);
+				throw new ParseException("Can't fetch charset for " + charsetName, e);
 			}
 		}
 		return javaCharset;

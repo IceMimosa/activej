@@ -96,7 +96,7 @@ public final class ByteBufQueue implements Recyclable {
 					if (size > maxSize || queue.hasRemainingBytes(maxSize - size + 1)) {
 						queue.recycle();
 						buf.recycle();
-						throw new UncheckedException(new InvalidSizeException(ByteBufQueue.class,
+						throw new UncheckedException(new InvalidSizeException(
 								"ByteBufQueue exceeds maximum size of " + maxSize + " bytes"));
 					}
 					queue.add(buf);
@@ -382,7 +382,7 @@ public final class ByteBufQueue implements Recyclable {
 		return bufs[(first + n) % bufs.length];
 	}
 
-	public int peekTo(@NotNull byte[] dest, int destOffset, int maxSize) {
+	public int peekTo(byte @NotNull [] dest, int destOffset, int maxSize) {
 		int s = maxSize;
 		int first = this.first;
 		while (first != this.last) {
@@ -568,7 +568,7 @@ public final class ByteBufQueue implements Recyclable {
 	 * @param maxSize    number of bytes for adding
 	 * @return number of drained bytes
 	 */
-	public int drainTo(@NotNull byte[] dest, int destOffset, int maxSize) {
+	public int drainTo(byte @NotNull [] dest, int destOffset, int maxSize) {
 		int s = maxSize;
 		while (hasRemaining()) {
 			ByteBuf buf = bufs[first];
@@ -589,7 +589,7 @@ public final class ByteBufQueue implements Recyclable {
 		return maxSize - s;
 	}
 
-	public int drainTo(@NotNull byte[] dest, int destOffset, int maxSize, @NotNull Consumer<ByteBuf> recycledBufs) {
+	public int drainTo(byte @NotNull [] dest, int destOffset, int maxSize, @NotNull Consumer<ByteBuf> recycledBufs) {
 		int s = maxSize;
 		while (hasRemaining()) {
 			ByteBuf buf = bufs[first];

@@ -106,12 +106,12 @@ public abstract class HttpMessage {
 		addHeader(header, HttpHeaderValue.of(string));
 	}
 
-	public void addHeader(@NotNull HttpHeader header, @NotNull byte[] value) {
+	public void addHeader(@NotNull HttpHeader header, byte @NotNull [] value) {
 		if (CHECK) checkState(!isRecycled());
 		addHeader(header, HttpHeaderValue.ofBytes(value, 0, value.length));
 	}
 
-	public void addHeader(@NotNull HttpHeader header, @NotNull byte[] array, int off, int len) {
+	public void addHeader(@NotNull HttpHeader header, byte @NotNull [] array, int off, int len) {
 		if (CHECK) checkState(!isRecycled());
 		addHeader(header, HttpHeaderValue.ofBytes(array, off, len));
 	}
@@ -198,7 +198,7 @@ public abstract class HttpMessage {
 		this.body = body;
 	}
 
-	public void setBody(@NotNull byte[] body) {
+	public void setBody(byte @NotNull [] body) {
 		if (CHECK) checkState(!isRecycled());
 		setBody(ByteBuf.wrapForReading(body));
 	}
@@ -279,7 +279,7 @@ public abstract class HttpMessage {
 					if (maxBodySize != 0 && queue.hasRemainingBytes(maxBodySize)) {
 						queue.recycle();
 						buf.recycle();
-						throw new UncheckedException(new InvalidSizeException(HttpMessage.class,
+						throw new UncheckedException(new InvalidSizeException(
 								"HTTP body size exceeds load limit " + maxBodySize));
 					}
 					queue.add(buf);

@@ -19,7 +19,6 @@ package io.activej.http;
 import io.activej.bytebuf.ByteBuf;
 import io.activej.bytebuf.ByteBufPool;
 import io.activej.bytebuf.ByteBufStrings;
-import io.activej.common.exception.parse.ParseException;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
@@ -45,12 +44,12 @@ public abstract class HttpHeaderValue {
 	}
 
 	@NotNull
-	public static HttpHeaderValue ofBytes(@NotNull byte[] array, int offset, int size) {
+	public static HttpHeaderValue ofBytes(byte @NotNull [] array, int offset, int size) {
 		return new HttpHeaderValueOfBytes(array, offset, size);
 	}
 
 	@NotNull
-	public static HttpHeaderValue ofBytes(@NotNull byte[] array) {
+	public static HttpHeaderValue ofBytes(byte @NotNull [] array) {
 		return ofBytes(array, 0, array.length);
 	}
 
@@ -94,17 +93,17 @@ public abstract class HttpHeaderValue {
 		return new HttpHeaderValueOfContentType(type);
 	}
 
-	public static int toPositiveInt(@NotNull ByteBuf buf) throws ParseException {
+	public static int toPositiveInt(@NotNull ByteBuf buf) throws HttpParseException {
 		return trimAndDecodePositiveInt(buf.array(), buf.head(), buf.readRemaining());
 	}
 
 	@NotNull
-	public static ContentType toContentType(@NotNull ByteBuf buf) throws ParseException {
+	public static ContentType toContentType(@NotNull ByteBuf buf) throws HttpParseException {
 		return ContentType.parse(buf.array(), buf.head(), buf.readRemaining());
 	}
 
 	@NotNull
-	public static Instant toInstant(@NotNull ByteBuf buf) throws ParseException {
+	public static Instant toInstant(@NotNull ByteBuf buf) throws HttpParseException {
 		return Instant.ofEpochSecond(HttpDate.parse(buf.array(), buf.head()));
 	}
 
@@ -118,22 +117,22 @@ public abstract class HttpHeaderValue {
 
 	@FunctionalInterface
 	public interface ParserIntoList<T> {
-		void parse(@NotNull ByteBuf buf, @NotNull List<T> into) throws ParseException;
+		void parse(@NotNull ByteBuf buf, @NotNull List<T> into) throws HttpParseException;
 	}
 
-	public static void toAcceptContentTypes(@NotNull ByteBuf buf, @NotNull List<AcceptMediaType> into) throws ParseException {
+	public static void toAcceptContentTypes(@NotNull ByteBuf buf, @NotNull List<AcceptMediaType> into) throws HttpParseException {
 		AcceptMediaType.parse(buf.array(), buf.head(), buf.readRemaining(), into);
 	}
 
-	public static void toAcceptCharsets(@NotNull ByteBuf buf, @NotNull List<AcceptCharset> into) throws ParseException {
+	public static void toAcceptCharsets(@NotNull ByteBuf buf, @NotNull List<AcceptCharset> into) throws HttpParseException {
 		AcceptCharset.parse(buf.array(), buf.head(), buf.readRemaining(), into);
 	}
 
-	static void toSimpleCookies(@NotNull ByteBuf buf, @NotNull List<HttpCookie> into) throws ParseException {
+	static void toSimpleCookies(@NotNull ByteBuf buf, @NotNull List<HttpCookie> into) throws HttpParseException {
 		HttpCookie.parseSimple(buf.array(), buf.head(), buf.tail(), into);
 	}
 
-	static void toFullCookies(@NotNull ByteBuf buf, @NotNull List<HttpCookie> into) throws ParseException {
+	static void toFullCookies(@NotNull ByteBuf buf, @NotNull List<HttpCookie> into) throws HttpParseException {
 		HttpCookie.parseFull(buf.array(), buf.head(), buf.tail(), into);
 	}
 
@@ -369,12 +368,11 @@ public abstract class HttpHeaderValue {
 	}
 
 	static final class HttpHeaderValueOfBytes extends HttpHeaderValue {
-		@NotNull
-		private final byte[] array;
+		private final byte @NotNull [] array;
 		private final int offset;
 		private final int size;
 
-		HttpHeaderValueOfBytes(@NotNull byte[] array, int offset, int size) {
+		HttpHeaderValueOfBytes(byte @NotNull [] array, int offset, int size) {
 			this.array = array;
 			this.offset = offset;
 			this.size = size;

@@ -177,7 +177,7 @@ public final class ChannelSuppliers {
 		if (supplier.isSuccess() && consumer.isSuccess()) {
 			return streamTo(supplier.get(), consumer.get());
 		}
-		StacklessException exception = new StacklessException("Channel stream failed");
+		StacklessException exception = new StacklessException(ChannelSuppliers.class, "Channel stream failed");
 		supplier.consume(AsyncCloseable::close, exception::addSuppressed);
 		consumer.consume(AsyncCloseable::close, exception::addSuppressed);
 		return Promise.ofException(exception);
@@ -343,7 +343,7 @@ public final class ChannelSuppliers {
 			}
 
 			@Override
-			public int read(@NotNull byte[] b, int off, int len) throws IOException {
+			public int read(byte @NotNull [] b, int off, int len) throws IOException {
 				return doRead(buf -> buf.read(b, off, min(buf.readRemaining(), len)));
 			}
 
@@ -487,7 +487,7 @@ public final class ChannelSuppliers {
 		private final Iterator<? extends ChannelSupplier<? extends T>> iterator;
 		private final boolean ownership;
 
-		public ChannelSupplierConcat (Iterator<? extends ChannelSupplier<? extends T>> iterator, boolean ownership) {
+		public ChannelSupplierConcat(Iterator<? extends ChannelSupplier<? extends T>> iterator, boolean ownership) {
 			this.iterator = iterator;
 			this.ownership = ownership;
 		}
